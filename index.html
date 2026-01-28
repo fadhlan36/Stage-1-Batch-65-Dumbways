@@ -1,11 +1,103 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Day 3 | Bootstrap</title>
-</head>
-<body>
-    <h1>Hello World!</h1>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Portfolio | Home</title>
+
+    <!-- Bootstrap -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Bootstrap Icons -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg bg-white shadow-sm">
+      <div class="container">
+        <a class="navbar-brand" href="#">
+          <img src="./images/logo.svg" height="30" alt="Logo" />
+        </a>
+
+        <div class="collapse navbar-collapse">
+          <div class="navbar-nav ms-4">
+            <a class="nav-link active fw-semibold" href="./index.html">Home</a>
+            <a class="nav-link" href="./project.html">My Project</a>
+          </div>
+        </div>
+
+        <button class="btn btn-contact-nav">Contact Me</button>
+      </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="bg-light py-5">
+      <div class="container">
+        <div class="card hero-card border-0 shadow-sm">
+          <div class="row align-items-start">
+            <!-- LEFT -->
+            <div class="col-md-7">
+              <div class="hero-text">
+                <h2 class="fw-bold">Hi! Welcome to my profile</h2>
+
+                <p class="text-muted text-justify">
+                  I am a Bachelor of Informatics graduate from Bhinneka
+                  Nusantara University with a passion for web development and
+                  software engineering. Besides coding, I really enjoy gaming
+                  and playing guitar in my spare time. I believe that technology
+                  can change the world for the better, and I'm always
+                  enthusiastic about learning new things and developing my
+                  skills in creating innovative digital solutions.
+                </p>
+
+                <div class="d-flex align-items-center gap-3 mb-4">
+                  <button class="btn btn-contact-hero">Contact</button>
+                  <a href="#" class="download-link">
+                    Download CV <i class="bi bi-download"></i>
+                  </a>
+                </div>
+
+                <div class="social-icons">
+                  <a href="#"><i class="bi bi-linkedin"></i></a>
+                  <a href="#"><i class="bi bi-instagram"></i></a>
+                  <a href="#"><i class="bi bi-facebook"></i></a>
+                  <a href="#"><i class="bi bi-twitter-x"></i></a>
+                </div>
+              </div>
+            </div>
+
+            <!-- RIGHT -->
+            <div class="col-md-5">
+              <div
+                class="card profile-card border-0 shadow-sm text-center mx-auto"
+              >
+                <img
+                  src="./images/Foto.JPG"
+                  class="card-img-top"
+                  alt="Profile"
+                />
+                <div class="card-body">
+                  <h5 class="fw-bold mb-0">Fadhlan Faidh</h5>
+                  <small class="text-muted">Fullstack Developer</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
 </html>

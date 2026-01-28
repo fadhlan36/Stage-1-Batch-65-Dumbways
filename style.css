@@ -1,0 +1,164 @@
+body {
+    background-color: #f8f9fa;
+    /* sama seperti bg-light DI Bootstrap */
+}
+
+/* =====================
+   NAVBAR
+===================== */
+.navbar .navbar-nav .nav-link.active {
+    color: #0f172a;
+    font-weight: 600;
+}
+
+/* =====================
+   BUTTON
+===================== */
+.btn-contact-nav {
+    background-color: #0f172a;
+    color: #fff;
+    border-radius: 8px;
+    padding: 8px 20px;
+    border: none;
+}
+
+.btn.btn-contact-nav:hover {
+    background-color: #fff;
+    color: #020617;
+    transition: 0.3s;
+    border: #020617 solid;
+}
+
+
+/* =====================
+   HERO
+===================== */
+.hero-card {
+    max-width: 1000px;
+    /* ← kunci utamanya */
+    margin: 0 auto;
+    /* center card */
+    padding: 48px;
+}
+
+.hero-text {
+    max-width: 480px;
+    /* bikin teks nggak terlalu lebar */
+    padding-top: 10px;
+    /* naik dikit (nggak center) */
+}
+
+.hero-text h2 {
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+}
+
+.text-justify {
+  text-align: justify;
+}
+
+.btn-contact-hero {
+    background-color: #0f172a;
+    color: #fff;
+    border-radius: 999px;
+    padding: 8px 35px;
+    border: none;
+    margin-top: 20px;
+}
+
+.btn.btn-contact-hero:hover {
+    background-color: #fff;
+    color: #020617;
+    transition: 0.3s;
+    border: #020617 solid;
+}
+
+
+/* =====================
+   DOWNLOAD LINK
+===================== */
+.download-link {
+    text-decoration: none;
+    color: #111;
+    font-weight: 500;
+    margin-top: 20px;
+}
+
+.download-link i {
+    margin-left: 4px;
+}
+
+/* =====================
+   SOCIAL ICONS
+===================== */
+.social-icons {
+    display: flex;
+    gap: 14px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.social-icons a {
+    width: 40px;
+    height: 40px;
+    background-color: #000;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.social-icons a:hover {
+    color: #f7d7a8;
+    transform: translateY(-2px);
+}
+
+/* =====================
+   PROFILE CARD
+===================== */
+.profile-card {
+    width: 100%;
+    max-width: 280px;
+}
+
+.profile-card img {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+/* =====================
+   CONTACT FORM
+===================== */
+.contact-wrapper {
+    max-width: 520px;
+}
+
+/* input style */
+.custom-input {
+    border-radius: 6px;
+    padding: 10px 12px;
+    border: none;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.custom-input:focus {
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+    outline: none;
+}
+
+/* submit button */
+.btn-submit {
+    background-color: #0f172a;
+    color: #fff;
+    padding: 8px 26px;
+    border-radius: 999px;
+    border: none;
+}
+
+.btn-submit:hover {
+    background-color: #020617;
+    color: #fff;
+}
