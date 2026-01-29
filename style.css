@@ -35,7 +35,6 @@ body {
 ===================== */
 .hero-card {
     max-width: 1000px;
-    /* ← kunci utamanya */
     margin: 0 auto;
     /* center card */
     padding: 48px;
