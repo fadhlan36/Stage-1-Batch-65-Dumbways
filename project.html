@@ -12,7 +12,7 @@
     />
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="./css/style.css">
   </head>
   <body>
     <!-- Navbar -->
@@ -152,6 +152,41 @@
     <div class="container">
       <div class="projects-section">
         <h2 class="text-center">MY PROJECT</h2>
+
+        <!-- Filter Section -->
+        <div class="mb-4 text-center">
+          <button
+            class="btn btn-sm btn-dark me-2 mb-2"
+            onclick="filterProjects('all')"
+          >
+            All
+          </button>
+          <button
+            class="btn btn-sm btn-outline-dark me-2 mb-2"
+            onclick="filterProjects('Node Js')"
+          >
+            Node Js
+          </button>
+          <button
+            class="btn btn-sm btn-outline-dark me-2 mb-2"
+            onclick="filterProjects('Next Js')"
+          >
+            Next Js
+          </button>
+          <button
+            class="btn btn-sm btn-outline-dark me-2 mb-2"
+            onclick="filterProjects('React Js')"
+          >
+            React Js
+          </button>
+          <button
+            class="btn btn-sm btn-outline-dark me-2 mb-2"
+            onclick="filterProjects('TypeScript')"
+          >
+            TypeScript
+          </button>
+        </div>
+
         <div
           class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4"
           id="projectsGrid"
@@ -159,8 +194,11 @@
       </div>
     </div>
 
-    <script src="./js/script.js"></script>
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- JavaScript -->
+    <script src="./js/script.js">
+    </script>
   </body>
 </html>

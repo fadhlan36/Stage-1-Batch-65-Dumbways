@@ -1,94 +1,186 @@
-let projects = [];
+// ========================================
+// 📦 DATA STORAGE (Penyimpanan Data)
+// ========================================
+let allProjects = [];
+let displayedProjects = [];
 
-// Load data dari local storage saat halaman pertama kali dibuka
-function loadFromStorage() {
-  const saved = localStorage.getItem("projects");
-  if (saved) {
-    projects = JSON.parse(saved);
+// ========================================
+// 💾 LOCAL STORAGE (Simpan & Load Data)
+// ========================================
+
+// Ambil data dari localStorage saat halaman dibuka
+const loadProjects = () => {
+  const savedData = localStorage.getItem("projects");
+
+  if (savedData) {
+    allProjects = JSON.parse(savedData);
+    displayedProjects = allProjects;
     renderProjects();
   }
-}
+};
 
-// Simpan data ke local storage
-function saveToStorage() {
-  localStorage.setItem("projects", JSON.stringify(projects));
-}
+// Simpan data ke localStorage
+const saveProjects = () => {
+  localStorage.setItem("projects", JSON.stringify(allProjects));
+};
 
-// Render projects ke halaman
-function renderProjects() {
-  let html = "";
-  for (let i = 0; i < projects.length; i++) {
-    let p = projects[i];
-    let badges = "";
-    for (let j = 0; j < p.technologies.length; j++) {
-      badges += `<span class="tech-badge">${p.technologies[j]}</span>`;
-    }
+// ========================================
+// 🎨 TAMPILAN (Render Functions)
+// ========================================
 
-    html += `
-            <div class="col">
-              <div class="project-card">
-                <div class="project-image">${p.name[0].toUpperCase()}</div>
-                <div class="p-3">
-                  <div class="project-title">${p.name}</div>
-                  <div class="project-duration">${p.startDate} - ${p.endDate}</div>
-                  <div class="project-description">${p.description}</div>
-                  <div class="mb-3">${badges}</div>
-                  <div class="d-flex gap-2 mb-3 pb-3 border-bottom">
-                    <div class="icon-btn">🔗</div>
-                    <div class="icon-btn">⚡</div>
-                    <div class="icon-btn">⋮</div>
-                  </div>
-                  <a href="detail.html?id=${p.id}" class="btn btn-dark btn-sm w-100">View Detail</a>
-                </div>
-              </div>
-            </div>
-          `;
-  }
-
-  document.getElementById("projectsGrid").innerHTML = html;
-}
-
-// Handle form submit
-document.getElementById("projectForm").onsubmit = function (e) {
-  e.preventDefault();
-
-  // Ambil technologies yang dicheck
-  let techs = [];
-  document.querySelectorAll(".tech-check:checked").forEach(function (cb) {
-    techs.push(cb.value);
+// Buat badge teknologi (React, Node.js, dll)
+const createTechBadges = (technologies) => {
+  const badges = technologies.map((tech) => {          //callback
+    return `<span class="tech-badge">${tech}</span>`;
   });
 
-  // Cari ID terbesar yang ada, terus tambah 1
-  let newId = 1;
-  if (projects.length > 0) {
-    let maxId = 0;
-    for (let i = 0; i < projects.length; i++) {
-      if (projects[i].id > maxId) {
-        maxId = projects[i].id;
-      }
-    }
-    newId = maxId + 1;
+  return badges.join("");
+};
+
+// Buat satu card project
+const createProjectCard = (project) => {
+  // Ambil huruf pertama untuk avatar
+  const firstLetter = project.name[0].toUpperCase();
+
+  // Buat badges teknologi
+  const techBadges = createTechBadges(project.technologies);
+
+  return `
+    <div class="col">
+      <div class="project-card">
+        <div class="project-image">${firstLetter}</div>
+        <div class="p-3">
+          <div class="project-title">${project.name}</div>
+          <div class="project-duration">${project.startDate} - ${project.endDate}</div>
+          <div class="project-description">${project.description}</div>
+          <div class="mb-3">${techBadges}</div> 
+          <a href="detail.html?id=${project.id}" class="btn btn-dark btn-sm w-100">
+            View Detail
+          </a>
+        </div>
+      </div>
+    </div>
+  `;
+};
+
+// Tampilkan pesan kosong jika tidak ada project
+const showEmptyState = () => {
+  return `
+    <div class="col-12 text-center py-5">
+      <h3>No Projects Found</h3>
+      <p>Belum ada project yang sesuai dengan filter.</p>
+    </div>
+  `;
+};
+
+// Render semua project ke halaman
+const renderProjects = () => {
+  const projectGrid = document.getElementById("projectsGrid");
+
+  // Jika tidak ada project, tampilkan pesan kosong
+  if (displayedProjects.length === 0) {
+    projectGrid.innerHTML = showEmptyState();
+    return;
   }
 
-  // Tambah project ke array dengan ID auto increment
-  projects.push({
-    id: newId,
+  // Buat semua card project
+  const allCards = displayedProjects.map(createProjectCard);
+
+  // Gabungkan semua card dan tampilkan
+  projectGrid.innerHTML = allCards.join("");
+};
+
+// ========================================
+// 🔍 FILTER (Saring Project)
+// ========================================
+
+const filterProjects = (selectedTech) => {
+  // Jika "all", tampilkan semua project
+  if (selectedTech === "all") {
+    displayedProjects = allProjects;
+  }
+  // Jika pilih teknologi tertentu, filter yang cocok
+  else {
+    displayedProjects = allProjects.filter((project) => {
+      return project.technologies.includes(selectedTech);
+    });
+  }
+
+  // Tampilkan hasil filter
+  renderProjects();
+};
+
+// ========================================
+// 📝 FORM (Tambah Project Baru)
+// ========================================
+
+// Ambil teknologi yang dipilih dari checkbox
+const getSelectedTechnologies = () => {
+  const checkedBoxes = document.querySelectorAll(".tech-check:checked");
+
+  const selectedTechs = Array.from(checkedBoxes).map((checkbox) => {
+    return checkbox.value;
+  });
+
+  return selectedTechs;
+};
+
+// Buat ID baru untuk project
+const generateNewId = () => {
+  // Jika belum ada project, mulai dari 1
+  if (allProjects.length === 0) {
+    return 1;
+  }
+
+  // Ambil semua ID yang ada
+  const existingIds = allProjects.map((project) => project.id);
+
+  // Cari ID terbesar, lalu tambah 1
+  const highestId = Math.max(...existingIds);
+  return highestId + 1;
+};
+
+// Ambil semua data dari form
+const getFormData = () => {
+  const projectData = {
+    id: generateNewId(),
     name: document.getElementById("projectName").value,
     startDate: document.getElementById("startDate").value,
     endDate: document.getElementById("endDate").value,
     description: document.getElementById("description").value,
-    technologies: techs,
-  });
+    technologies: getSelectedTechnologies(),
+  };
 
-  // Simpan ke local storage
-  saveToStorage();
-
-  // Render ulang
-  renderProjects();
-
-  // Reset form
-  this.reset();
+  return projectData;
 };
 
-// Load data saat halaman pertama kali dibuka
-loadFromStorage();
+// Ketika form disubmit
+const handleFormSubmit = (event) => {
+  event.preventDefault(); // Jangan refresh halaman
+
+  // Ambil data dari form
+  const newProject = getFormData();
+
+  // Tambahkan ke daftar project
+  allProjects.push(newProject);
+
+  // Simpan ke localStorage
+  saveProjects();
+
+  // Update tampilan
+  displayedProjects = allProjects;
+  renderProjects();
+
+  // Kosongkan form
+  event.target.reset();
+};
+
+// ========================================
+// 🚀 JALANKAN SAAT HALAMAN DIBUKA
+// ========================================
+
+// Pasang event handler ke form
+document.getElementById("projectForm").onsubmit = handleFormSubmit;
+
+// Load data dari localStorage
+loadProjects();
