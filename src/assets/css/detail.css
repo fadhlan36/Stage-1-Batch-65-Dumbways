@@ -1,0 +1,140 @@
+body {
+    background-color: #f5f5f5;
+    padding: 0;
+}
+
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 15px 0;
+    background: white;
+}
+
+.logo-img {
+    height: 40px;
+    width: auto;
+}
+
+.nav-link {
+    color: #333;
+    font-size: 14px;
+    margin: 0 10px;
+}
+
+.nav-link.active {
+    font-weight: bold;
+    color: #000;
+}
+
+.contact-btn {
+    background-color: #1a1a1a;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 24px;
+    font-size: 13px;
+}
+
+.contact-btn:hover {
+    background-color: #333;
+}
+
+.detail-section {
+    padding: 40px 0;
+    background-color: #e8e8e8;
+}
+
+.project-title-main {
+    font-size: 42px;
+    font-weight: bold;
+    color: #000;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.project-image-detail {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 8px;
+    background: #333;
+}
+
+.detail-sidebar {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-section {
+    margin-bottom: 35px;
+}
+
+.sidebar-section:last-child {
+    margin-bottom: 0;
+}
+
+.sidebar-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #000;
+    margin-bottom: 20px;
+}
+
+.duration-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+    font-size: 15px;
+    color: #333;
+}
+
+.duration-icon {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+
+.tech-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #f5f5f5;
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #333;
+}
+
+.tech-icon {
+    width: 25px;
+    height: 25px;
+    background: #000;
+    color: white;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.description-section {
+    background: white;
+    padding: 40px;
+    border-radius: 8px;
+    margin-top: 40px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.description-text {
+    font-size: 15px;
+    line-height: 1.8;
+    color: #333;
+    text-align: justify;
+}

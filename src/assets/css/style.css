@@ -1,0 +1,109 @@
+body {
+    background-color: #e9ecef;
+}
+
+/* NAVBAR */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 15px 0;
+}
+
+.logo-img {
+    height: 40px;
+}
+
+.nav-link.active {
+    font-weight: bold;
+    color: #000 !important;
+}
+
+/* HERO SECTION */
+.hero-section {
+    background-color: #e9ecef;
+    padding: 60px 0;
+    margin-bottom: 50px;
+}
+
+.hero-wrapper {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    max-width: 950px;
+    margin: 0 auto;
+}
+
+.hero-title {
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    margin-top: 25px;
+    /* tadinya 60, terlalu jauh */
+}
+
+.hero-description {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.7;
+    text-align: justify;
+    max-width: 450px;
+    margin-bottom: 30px;
+}
+
+.hero-contact-btn {
+    background-color: #1a1a1a;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 30px;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.hero-contact-btn:hover {
+    background-color: #333;
+}
+
+.download-text {
+    font-size: 14px;
+    margin-left: 15px;
+    cursor: pointer;
+}
+
+/* SOCIAL ICON */
+.social-icons {
+    margin-top: 30px;
+    /* tetap turun tapi nggak terlalu jauh */
+}
+
+/* PROFILE CARD */
+.profile-card {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    background: white;
+    max-width: 320px;
+    margin: 0 auto;
+}
+
+.profile-card img {
+    height: 300px;
+    /* sedikit lebih portrait */
+    object-fit: cover;
+}
+
+.profile-body {
+    text-align: center;
+    padding: 15px;
+}
+
+.profile-name {
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 0;
+}
+
+.profile-role {
+    font-size: 13px;
+    color: #888;
+}
