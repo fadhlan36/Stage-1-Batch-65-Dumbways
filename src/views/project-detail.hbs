@@ -1,0 +1,110 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Project Detail</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../assets/css/detail.css" />
+  </head>
+  <body>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+      <div class="container">
+        <a class="navbar-brand" href="/">
+          <img src="../assets/images/logo.svg" alt="Logo" class="logo-img" />
+        </a>
+
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/project">My Project</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/contact">Contact</a>
+            </li>
+          </ul>
+
+          <button class="btn btn-dark btn-sm contact-btn">Contact Me</button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Detail Section -->
+    <div class="detail-section">
+      <div class="container">
+        <h1 class="project-title-main" id="projectTitle"></h1>
+
+        <div class="row">
+          <!-- Left Column - Image -->
+          <div class="col-lg-7 mb-4">
+            <img
+              src=""
+              alt="Project Image"
+              class="project-image-detail"
+              id="projectImage"
+            />
+          </div>
+
+          <!-- Right Column - Info Sidebar -->
+          <div class="col-lg-5">
+            <div class="detail-sidebar">
+              <!-- Duration Section -->
+              <div class="sidebar-section">
+                <h3 class="sidebar-title">Duration</h3>
+                <div class="duration-item">
+                  <div class="duration-icon">📅</div>
+                  <div id="projectDates"></div>
+                </div>
+                <div class="duration-item">
+                  <div class="duration-icon">⏱️</div>
+                  <div id="projectDuration"></div>
+                </div>
+              </div>
+
+              <!-- Technologies Section -->
+              <div class="sidebar-section">
+                <h3 class="sidebar-title">Technologies</h3>
+                <div id="projectTechnologies"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Description Section -->
+        <div class="description-section">
+          <p class="description-text" id="projectDescription"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    ></script>
+
+    <!-- JavaScript -->
+    <script src="../assets/js/detail.js"></script>
+  </body>
+</html>
