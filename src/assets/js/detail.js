@@ -1,4 +1,4 @@
-// Ambil ID dari URL parameter
+// Ambil ID dari URL halaman
 const pathParts = window.location.pathname.split("/");
 const projectId = pathParts[2];
 
