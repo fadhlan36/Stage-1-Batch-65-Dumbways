@@ -55,25 +55,25 @@
         <div class="hero-wrapper">
           <h3 class="text-center mb-4 fw-bold">GET IN TOUCH</h3>
 
-          <form class="mx-auto" style="max-width:500px;">
+          <form class="mx-auto" style="max-width:500px;" action="/contact" method="post">
             <div class="mb-3">
               <label class="form-label">Name</label>
-              <input type="text" class="form-control shadow-sm" />
+              <input type="text" class="form-control shadow-sm" id="name" name="name" />
             </div>
 
             <div class="mb-3">
               <label class="form-label">Email</label>
-              <input type="email" class="form-control shadow-sm" />
+              <input type="email" class="form-control shadow-sm" id="email" name="email" />
             </div>
 
             <div class="mb-3">
               <label class="form-label">Phone Number</label>
-              <input type="text" class="form-control shadow-sm" />
+              <input type="text" class="form-control shadow-sm" id="phoneNumber" name="phoneNumber"/>
             </div>
 
             <div class="mb-3">
               <label class="form-label">Subject</label>
-              <select class="form-select shadow-sm">
+              <select class="form-select shadow-sm" id="subject" name="subject">
                 <option>Let's Talk</option>
                 <option>Hiring</option>
                 <option>Collaboration</option>
@@ -82,11 +82,11 @@
 
             <div class="mb-3">
               <label class="form-label">Your Message</label>
-              <textarea rows="5" class="form-control shadow-sm"></textarea>
+              <textarea rows="5" class="form-control shadow-sm" id="message" name="message"></textarea>
             </div>
 
             <div class="text-end">
-              <button class="btn btn-dark px-4 rounded-pill">Submit</button>
+              <button type="submit" class="btn btn-dark px-4 rounded-pill">Submit</button>
             </div>
           </form>
 
