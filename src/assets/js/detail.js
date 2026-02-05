@@ -1,6 +1,6 @@
 // Ambil ID dari URL parameter
-const urlParams = new URLSearchParams(window.location.search);
-const projectId = urlParams.get("id");
+const pathParts = window.location.pathname.split("/");
+const projectId = pathParts[2];
 
 // Function untuk hitung durasi
 function calculateDuration(start, end) {
@@ -111,7 +111,7 @@ if (saved) {
           <div class="container text-center py-5">
             <h1>No Data</h1>
             <p>Belum ada project yang tersimpan.</p>
-            <a href="index.html" class="btn btn-dark">← Back to Projects</a>
+            <a href="/project" class="btn btn-dark">← Back to Projects</a>
           </div>
         `;
 }
