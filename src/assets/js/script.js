@@ -55,7 +55,7 @@ const createProjectCard = (project) => {
           <div class="project-duration">${project.startDate} - ${project.endDate}</div>
           <div class="project-description">${project.description}</div>
           <div class="mb-3">${techBadges}</div> 
-          <a href="detail.html?id=${project.id}" class="btn btn-dark btn-sm w-100">
+          <a href="/project-detail/${project.id}" class="btn btn-dark btn-sm w-100">
             View Detail
           </a>
         </div>
