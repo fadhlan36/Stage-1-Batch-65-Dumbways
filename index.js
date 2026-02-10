@@ -1,6 +1,9 @@
 import express from "express";
 import { Pool } from "pg";
 import hbs from "hbs";
+import bcrypt from "bcrypt";
+import flash from "express-flash";
+import session from "express-session";
 
 const app = express();
 const port = 3000;
@@ -25,10 +28,12 @@ db.connect();
 app.set("view engine", "hbs");
 app.set("views", "src/views");
 
+// ========================================
 // HELPER HBS
+// ========================================
 hbs.registerHelper("includes", function (array, value) {
   if (!array) return false;
-  return array.map(Number).includes(Number(value)); // Ngubah data string jadi angka
+  return array.map(Number).includes(Number(value));
 });
 
 hbs.registerHelper("formatDate", function (date) {
@@ -42,50 +47,69 @@ hbs.registerHelper("formatDate", function (date) {
 app.use("/assets", express.static("src/assets"));
 app.use(express.urlencoded({ extended: false }));
 
+app.use(
+  session({
+    secret: "secretKey",
+    resave: false,
+    saveUninitialized: true,
+  }),
+);
+
+app.use(flash());
+
 // ========================================
-// ROUTES
+// AUTH MIDDLEWARE
+// ========================================
+function authMiddleware(req, res, next) {
+  if (!req.session.user) {
+    req.flash("error", "Kamu harus login dulu!");
+    return res.redirect("/login");
+  }
+  next();
+}
+
+// ========================================
+// HOME
 // ========================================
 app.get("/", (req, res) => {
   res.render("index");
 });
 
 // ========================================
+// HOME
+// ========================================
+app.get("/contact", (req, res) => {;
+  res.render("contact");
+});
+
+// ========================================
 // GET PROJECT
 // ========================================
-app.get("/project", async (req, res) => {
-  try {
-    const techQuery = `SELECT * FROM technologies`;
-    const techResult = await db.query(techQuery);
+app.get("/project", authMiddleware, async (req, res) => {
+  let userData = req.session.user?.name || null;
 
-    const projectQuery = `
+  try {
+    const techResult = await db.query(`SELECT * FROM technologies`);
+
+    const projectResult = await db.query(`
       SELECT 
         p.id,
         p.title,
         p.description,
         p.start_date,
         p.end_date,
-        ARRAY_AGG(t.id) AS technologies,
-        ARRAY_AGG(t.tech_name) AS tech_names
+        ARRAY_AGG(t.tech_name) AS technologies
       FROM projects p
       LEFT JOIN project_technologies pt ON p.id = pt.project_id
       LEFT JOIN technologies t ON pt.technology_id = t.id
       GROUP BY p.id
       ORDER BY p.id DESC
-    `;
-
-    const projectResult = await db.query(projectQuery);
-
-    // 🔽 Addition
-    const projects = projectResult.rows.map((project) => {
-      return {
-        ...project,
-        technologies: project.tech_names, // change from numbers to techname
-      };
-    });
+    `);
 
     res.render("project", {
       technologies: techResult.rows,
-      projects: projects,
+      projects: projectResult.rows,
+      userData,
     });
   } catch (error) {
     console.log(error);
@@ -95,23 +119,16 @@ app.get("/project", async (req, res) => {
 // ========================================
 // CREATE PROJECT
 // ========================================
-app.post("/project", async (req, res) => {
+app.post("/project", authMiddleware, async (req, res) => {
   try {
     const { title, startDate, endDate, description, technologies } = req.body;
 
-    const insertProject = `
-      INSERT INTO projects (title, description, start_date, end_date, user_id)
-      VALUES ($1,$2,$3,$4,$5)
-      RETURNING id
-    `;
-
-    const result = await db.query(insertProject, [
-      title,
-      description,
-      startDate,
-      endDate,
-      1,
-    ]);
+    const result = await db.query(
+      `INSERT INTO projects (title, description, start_date, end_date, user_id)
+       VALUES ($1,$2,$3,$4,$5)
+       RETURNING id`,
+      [title, description, startDate, endDate, req.session.user.id],
+    );
 
     const projectId = result.rows[0].id;
 
@@ -138,16 +155,14 @@ app.post("/project", async (req, res) => {
 // ========================================
 // DELETE PROJECT
 // ========================================
-app.get("/delete-project/:id", async (req, res) => {
+app.get("/delete-project/:id", authMiddleware, async (req, res) => {
   const { id } = req.params;
 
   try {
     await db.query("DELETE FROM project_technologies WHERE project_id=$1", [
       id,
     ]);
-
     await db.query("DELETE FROM projects WHERE id=$1", [id]);
-
     res.redirect("/project");
   } catch (error) {
     console.log(error);
@@ -157,36 +172,30 @@ app.get("/delete-project/:id", async (req, res) => {
 // ========================================
 // EDIT PAGE
 // ========================================
-app.get("/edit-project/:id", async (req, res) => {
+app.get("/edit-project/:id", authMiddleware, async (req, res) => {
   const { id } = req.params;
+  let userData = req.session.user?.name || null;
 
   try {
-    // ambil semua technology dari db dan tampilkan tulisannya
     const techResult = await db.query(`SELECT * FROM technologies`);
 
-    // ambil project + tech yg sudah dipilih
     const projectResult = await db.query(
-      `
-      SELECT 
-        p.*,
-        ARRAY_AGG(pt.technology_id) AS technologies
-      FROM projects p
-      LEFT JOIN project_technologies pt ON p.id = pt.project_id
-      WHERE p.id=$1
-      GROUP BY p.id
-      `,
+      `SELECT p.*, ARRAY_AGG(pt.technology_id) AS technologies
+       FROM projects p
+       LEFT JOIN project_technologies pt ON p.id = pt.project_id
+       WHERE p.id=$1
+       GROUP BY p.id`,
       [id],
     );
 
     const project = projectResult.rows[0];
-
-    // biar tidak null
-    const selectedTech = project.technologies || [];
+    const selectedTech = project?.technologies || [];
 
     res.render("edit-project", {
-      project: project,
+      project,
       technologies: techResult.rows,
-      selectedTech: selectedTech,
+      selectedTech,
+      userData,
     });
   } catch (error) {
     console.log(error);
@@ -196,17 +205,15 @@ app.get("/edit-project/:id", async (req, res) => {
 // ========================================
 // UPDATE PROJECT
 // ========================================
-app.post("/edit-project/:id", async (req, res) => {
+app.post("/edit-project/:id", authMiddleware, async (req, res) => {
   const { id } = req.params;
   const { title, startDate, endDate, description, technologies } = req.body;
 
   try {
     await db.query(
-      `
-      UPDATE projects 
-      SET title=$1, description=$2, start_date=$3, end_date=$4
-      WHERE id=$5
-      `,
+      `UPDATE projects 
+       SET title=$1, description=$2, start_date=$3, end_date=$4
+       WHERE id=$5`,
       [title, description, startDate, endDate, id],
     );
 
@@ -235,17 +242,92 @@ app.post("/edit-project/:id", async (req, res) => {
 });
 
 // ========================================
-// DETAIL PROJECT
+// AUTH ROUTES
 // ========================================
-app.get("/project-detail/:id", (req, res) => {
-  res.render("project-detail");
-});
+app.get("/login", login);
+app.post("/login", handleLogin);
+app.get("/register", register);
+app.post("/register", handleRegister);
 
 // ========================================
-// CONTACT
+// REGISTER
 // ========================================
-app.get("/contact", (req, res) => {
-  res.render("contact");
+function register(req, res) {
+  res.render("register", {
+    error: req.flash("error")[0],
+    success: req.flash("success")[0],
+  });
+}
+
+async function handleRegister(req, res) {
+  const { name, email, password } = req.body;
+
+  const check = await db.query(`SELECT * FROM users WHERE email=$1`, [email]);
+
+  if (check.rows.length > 0) {
+    req.flash("error", "Email sudah terdaftar");
+    return res.redirect("/register");
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  await db.query(`INSERT INTO users(name,email,password) VALUES ($1,$2,$3)`, [
+    name,
+    email,
+    hashedPassword,
+  ]);
+
+  req.flash("success", "Register berhasil, silakan login");
+  res.redirect("/login");
+}
+
+// ========================================
+// LOGIN
+// ========================================
+function login(req, res) {
+  res.render("login", {
+    error: req.flash("error")[0],
+    success: req.flash("success")[0],
+  });
+}
+
+async function handleLogin(req, res) {
+  const { email, password } = req.body;
+
+  const result = await db.query(`SELECT * FROM users WHERE email=$1`, [email]);
+
+  if (result.rows.length === 0) {
+    req.flash("error", "Email tidak ditemukan");
+    return res.redirect("/login");
+  }
+
+  const user = result.rows[0];
+  const isMatch = await bcrypt.compare(password, user.password);
+
+  if (!isMatch) {
+    req.flash("error", "Password salah");
+    return res.redirect("/login");
+  }
+
+  req.session.user = {
+    id: user.id,
+    name: user.name,
+  };
+
+  res.redirect("/project");
+}
+
+// ========================================
+// LOGOUT
+// ========================================
+app.get("/logout", (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.log(err);
+      return res.redirect("/project");
+    }
+    res.redirect("/login");
+  });
 });
 
 // ========================================

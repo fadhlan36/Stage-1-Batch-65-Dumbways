@@ -9,6 +9,10 @@ body {
     background: white;
 }
 
+.contact-btn {
+    margin-left: 15px;
+}
+
 .logo-img {
     height: 40px;
     width: auto;

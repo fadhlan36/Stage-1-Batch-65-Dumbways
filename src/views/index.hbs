@@ -1,4 +1,3 @@
-<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -54,6 +53,17 @@
           </ul>
 
           <button class="btn btn-dark btn-sm contact-btn">Contact Me</button>
+          <a class="btn btn-primary btn-sm contact-btn" href="/login">Login</a>
+          <a
+            class="btn btn-warning btn-sm contact-btn"
+            href="/register"
+          >Register</a>
+          {{#if userData}}
+            <p style="margin-left: 15px;">{{userData}}</p>
+          {{/if}}
+          {{#if userData}}
+            <a href="/logout" class="btn btn-danger">Logout</a>
+          {{/if}}
         </div>
       </div>
     </nav>
@@ -66,7 +76,6 @@
             <!-- LEFT -->
             <div class="col-md-7">
               <h2 class="hero-title">Hi! Welcome to my hut</h2>
-
               <div class="text-wrapper">
                 <p class="hero-description">
                   I am a Bachelor of Informatics graduate from Bhinneka
@@ -82,7 +91,8 @@
               <div class="d-flex align-items-center mt-3">
                 <button class="hero-contact-btn">contact</button>
                 <span class="download-text ms-3">
-                  download CV <i class="bi bi-download"></i>
+                  download CV
+                  <i class="bi bi-download"></i>
                 </span>
               </div>
 
@@ -115,6 +125,8 @@
     </section>
 
     <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    ></script>
   </body>
 </html>

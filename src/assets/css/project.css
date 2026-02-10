@@ -9,6 +9,10 @@ body {
     padding: 15px 0;
 }
 
+.contact-btn {
+    margin-left: 15px;
+}
+
 .logo-img {
     height: 40px;
 }
@@ -16,6 +20,34 @@ body {
 .nav-link.active {
     font-weight: bold;
     color: #000 !important;
+}
+
+/* USER NAVBAR */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 15px;
+}
+
+.user-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #1a1a1a;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+.user-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
 }
 
 .form-section {

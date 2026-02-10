@@ -10,8 +10,11 @@
     "start": "nodemon index.js"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "body-parser": "^2.2.2",
     "express": "^5.2.1",
+    "express-flash": "^0.0.2",
+    "express-session": "^1.19.0",
     "hbs": "^4.2.0",
     "pg": "^8.18.0"
   },
