@@ -13,10 +13,10 @@
 
   <body>
     <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
       <div class="container">
         <a class="navbar-brand" href="/">
-          <img src="../assets/images/logo.svg" alt="Logo" class="logo-img" />
+          <img src="/assets/images/logo.svg" alt="Logo" class="logo-img" />
         </a>
 
         <button
@@ -41,9 +41,23 @@
             </li>
           </ul>
 
-          <button class="btn btn-dark btn-sm contact-btn">Contact Me</button>
-          <a class="btn btn-primary btn-sm contact-btn" href="/login">Login</a>
-          <a class="btn btn-warning btn-sm contact-btn" href="/register">Register</a>
+          <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-dark btn-sm">Contact Me</button>
+
+            {{#if userData}}
+              <div class="user-info">
+                <div class="user-avatar">
+                  {{userData.[0]}}
+                </div>
+                <span class="user-name">{{userData}}</span>
+              </div>
+
+              <a href="/logout" class="btn btn-danger btn-sm">Logout</a>
+            {{else}}
+              <a class="btn btn-primary btn-sm" href="/login">Login</a>
+              <a class="btn btn-warning btn-sm" href="/register">Register</a>
+            {{/if}}
+          </div>
         </div>
       </div>
     </nav>
@@ -54,7 +68,8 @@
         <div class="form-wrapper">
           <h2 class="text-center">EDIT PROJECT</h2>
 
-          <form method="POST" action="/edit-project/{{project.id}}">
+          <!-- TAMBAH enctype -->
+          <form method="POST" action="/edit-project/{{project.id}}" enctype="multipart/form-data">
             
             <!-- TITLE -->
             <div class="mb-3">
@@ -101,6 +116,30 @@
                 name="description"
                 required
               >{{project.description}}</textarea>
+            </div>
+
+            <!-- CURRENT IMAGE -->
+            {{#if project.image}}
+            <div class="mb-3">
+              <label class="form-label">Current Image</label><br />
+              <img
+                src="/uploads/{{project.image}}"
+                alt="Project Image"
+                width="150"
+                class="rounded shadow-sm"
+              />
+            </div>
+            {{/if}}
+
+            <!-- UPLOAD NEW IMAGE -->
+            <div class="mb-3">
+              <label class="form-label">Change Image (Optional)</label>
+              <input
+                type="file"
+                class="form-control"
+                name="image"
+                accept="image/*"
+              />
             </div>
 
             <!-- TECHNOLOGIES -->

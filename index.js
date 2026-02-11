@@ -4,6 +4,8 @@ import hbs from "hbs";
 import bcrypt from "bcrypt";
 import flash from "express-flash";
 import session from "express-session";
+import multer from "multer";
+import fs from "fs";
 
 const app = express();
 const port = 3000;
@@ -45,6 +47,7 @@ hbs.registerHelper("formatDate", function (date) {
 // MIDDLEWARE
 // ========================================
 app.use("/assets", express.static("src/assets"));
+app.use("/uploads", express.static("src/assets/uploads"));
 app.use(express.urlencoded({ extended: false }));
 
 app.use(
@@ -69,16 +72,28 @@ function authMiddleware(req, res, next) {
 }
 
 // ========================================
+// MULTER CONFIG
+// ========================================
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "src/assets/uploads");
+  },
+  filename: function (req, file, cb) {
+    const uniqueName = Date.now() + "-" + file.originalname;
+    cb(null, uniqueName);
+  },
+});
+
+const upload = multer({ storage });
+
+// ========================================
 // HOME
 // ========================================
 app.get("/", (req, res) => {
   res.render("index");
 });
 
-// ========================================
-// HOME
-// ========================================
-app.get("/contact", (req, res) => {;
+app.get("/contact", (req, res) => {
   res.render("contact");
 });
 
@@ -98,6 +113,7 @@ app.get("/project", authMiddleware, async (req, res) => {
         p.description,
         p.start_date,
         p.end_date,
+        p.image,
         ARRAY_AGG(t.tech_name) AS technologies
       FROM projects p
       LEFT JOIN project_technologies pt ON p.id = pt.project_id
@@ -119,38 +135,46 @@ app.get("/project", authMiddleware, async (req, res) => {
 // ========================================
 // CREATE PROJECT
 // ========================================
-app.post("/project", authMiddleware, async (req, res) => {
-  try {
-    const { title, startDate, endDate, description, technologies } = req.body;
+app.post(
+  "/project",
+  authMiddleware,
+  upload.single("image"),
+  async (req, res) => {
+    try {
+      const { title, startDate, endDate, description, technologies } = req.body;
 
-    const result = await db.query(
-      `INSERT INTO projects (title, description, start_date, end_date, user_id)
-       VALUES ($1,$2,$3,$4,$5)
-       RETURNING id`,
-      [title, description, startDate, endDate, req.session.user.id],
-    );
+      const image = req.file ? req.file.filename : null;
+      const userId = req.session.user.id;
 
-    const projectId = result.rows[0].id;
+      const result = await db.query(
+        `INSERT INTO projects (title, description, start_date, end_date, user_id, image)
+         VALUES ($1,$2,$3,$4,$5,$6)
+         RETURNING id`,
+        [title, description, startDate, endDate, userId, image],
+      );
 
-    if (technologies) {
-      const techArray = Array.isArray(technologies)
-        ? technologies
-        : [technologies];
+      const projectId = result.rows[0].id;
 
-      for (let techId of techArray) {
-        await db.query(
-          `INSERT INTO project_technologies (project_id, technology_id)
-           VALUES ($1,$2)`,
-          [projectId, techId],
-        );
+      if (technologies) {
+        const techArray = Array.isArray(technologies)
+          ? technologies
+          : [technologies];
+
+        for (let techId of techArray) {
+          await db.query(
+            `INSERT INTO project_technologies (project_id, technology_id)
+             VALUES ($1,$2)`,
+            [projectId, techId],
+          );
+        }
       }
-    }
 
-    res.redirect("/project");
-  } catch (error) {
-    console.log(error);
-  }
-});
+      res.redirect("/project");
+    } catch (error) {
+      console.log(error);
+    }
+  },
+);
 
 // ========================================
 // DELETE PROJECT
@@ -159,10 +183,29 @@ app.get("/delete-project/:id", authMiddleware, async (req, res) => {
   const { id } = req.params;
 
   try {
+    // ambil nama gambar dulu
+    const project = await db.query("SELECT image FROM projects WHERE id=$1", [
+      id,
+    ]);
+
+    const imageName = project.rows[0]?.image;
+
+    // hapus file jika ada
+    if (imageName) {
+      const imagePath = `src/assets/uploads/${imageName}`;
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+      }
+    }
+
+    // hapus relasi tech
     await db.query("DELETE FROM project_technologies WHERE project_id=$1", [
       id,
     ]);
+
+    // hapus project
     await db.query("DELETE FROM projects WHERE id=$1", [id]);
+
     res.redirect("/project");
   } catch (error) {
     console.log(error);
@@ -205,41 +248,68 @@ app.get("/edit-project/:id", authMiddleware, async (req, res) => {
 // ========================================
 // UPDATE PROJECT
 // ========================================
-app.post("/edit-project/:id", authMiddleware, async (req, res) => {
-  const { id } = req.params;
-  const { title, startDate, endDate, description, technologies } = req.body;
+app.post(
+  "/edit-project/:id",
+  authMiddleware,
+  upload.single("image"),
+  async (req, res) => {
+    const { id } = req.params;
+    const { title, startDate, endDate, description, technologies } = req.body;
 
-  try {
-    await db.query(
-      `UPDATE projects 
-       SET title=$1, description=$2, start_date=$3, end_date=$4
-       WHERE id=$5`,
-      [title, description, startDate, endDate, id],
-    );
+    try {
+      // ambil data lama
+      const oldProject = await db.query(
+        "SELECT image FROM projects WHERE id=$1",
+        [id],
+      );
 
-    await db.query("DELETE FROM project_technologies WHERE project_id=$1", [
-      id,
-    ]);
+      let imageName = oldProject.rows[0].image;
 
-    if (technologies) {
-      const techArray = Array.isArray(technologies)
-        ? technologies
-        : [technologies];
+      // kalau upload gambar baru
+      if (req.file) {
+        const oldImagePath = `src/assets/uploads/${imageName}`;
 
-      for (let techId of techArray) {
-        await db.query(
-          `INSERT INTO project_technologies (project_id, technology_id)
-           VALUES ($1,$2)`,
-          [id, techId],
-        );
+        if (fs.existsSync(oldImagePath)) {
+          fs.unlinkSync(oldImagePath); // hapus gambar lama
+        }
+
+        imageName = req.file.filename; // pakai gambar baru
       }
-    }
 
-    res.redirect("/project");
-  } catch (error) {
-    console.log(error);
-  }
-});
+      // update project
+      await db.query(
+        `UPDATE projects 
+       SET title=$1, description=$2, start_date=$3, end_date=$4, image=$5
+       WHERE id=$6`,
+        [title, description, startDate, endDate, imageName, id],
+      );
+
+      // hapus tech lama
+      await db.query("DELETE FROM project_technologies WHERE project_id=$1", [
+        id,
+      ]);
+
+      // insert tech baru
+      if (technologies) {
+        const techArray = Array.isArray(technologies)
+          ? technologies
+          : [technologies];
+
+        for (let techId of techArray) {
+          await db.query(
+            `INSERT INTO project_technologies (project_id, technology_id)
+           VALUES ($1,$2)`,
+            [id, techId],
+          );
+        }
+      }
+
+      res.redirect("/project");
+    } catch (error) {
+      console.log(error);
+    }
+  },
+);
 
 // ========================================
 // AUTH ROUTES

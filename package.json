@@ -16,6 +16,7 @@
     "express-flash": "^0.0.2",
     "express-session": "^1.19.0",
     "hbs": "^4.2.0",
+    "multer": "^2.0.2",
     "pg": "^8.18.0"
   },
   "devDependencies": {
