@@ -125,17 +125,70 @@ body.dark-mode .card:hover {
 
 /* ================= EXPERIENCE CARD ================= */
 
-.exp-card {
-    background: #ffffff;
-    border-radius: 14px;
-    padding: 24px;
-    border: 1px solid #eee;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+#experience {
+    position: relative;
 }
 
+.exp-card {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 28px;
+    border: 1px solid #f1f1f1;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+    transition: all 0.35s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.exp-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, #22c55e, #16a34a);
+    transition: 0.3s ease;
+}
+
+.exp-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+}
+
+.exp-card:hover::before {
+    width: 6px;
+}
+
+#experience h5 {
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+#experience .text-muted {
+    font-size: 14px;
+    color: #6b7280 !important;
+}
+
+#experience .text-success {
+    font-weight: 500;
+}
+
+/* Dark Mode Experience */
+
 body.dark-mode .exp-card {
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(12px);
+}
+
+body.dark-mode .exp-card:hover {
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7);
+}
+
+body.dark-mode .exp-card::before {
+    background: linear-gradient(180deg, #22c55e, #4ade80);
 }
 
 body.dark-mode #experience .text-muted {
@@ -208,6 +261,14 @@ body.dark-mode .project-img {
     padding: 24px;
 }
 
+.project-links a {
+    text-decoration: none;
+}
+
+.project-links a:hover {
+    text-decoration: none;
+}
+
 /* ================= HERO ================= */
 
 .hero-img {
@@ -224,7 +285,6 @@ body.dark-mode .hero-img {
         0 0 40px rgba(99, 102, 241, 0.3);
 }
 
-/* Hero paragraph tone balance */
 #hero .text-muted {
     color: #6b7280 !important;
 }
@@ -233,7 +293,7 @@ body.dark-mode #hero .text-muted {
     color: #94a3b8 !important;
 }
 
-/* ================= TECH SCROLL (ASLI, TIDAK DIUBAH) ================= */
+/* ================= TECH SCROLL ================= */
 
 .tech-wrapper {
     overflow: hidden;
@@ -336,24 +396,20 @@ body.dark-mode .footer-icons a {
     color: #0d6efd;
 }
 
-/* Fixing download cv not turning into white in darkmode*/
 /* ================= NAVBAR DOWNLOAD CV FIX ================= */
 
-/* Default (Light Mode) */
 .nav-buttons .btn-dark {
     background-color: #212529;
     border-color: #212529;
     color: #ffffff;
 }
 
-/* Dark Mode → jadi putih */
 body.dark-mode .nav-buttons .btn-dark {
     background-color: #ffffff !important;
     border-color: #ffffff !important;
     color: #0f172a !important;
 }
 
-/* Hover saat dark mode */
 body.dark-mode .nav-buttons .btn-dark:hover {
     background-color: #e5e7eb !important;
     border-color: #e5e7eb !important;
@@ -362,23 +418,54 @@ body.dark-mode .nav-buttons .btn-dark:hover {
 
 /* ================= HERO DOWNLOAD CV FIX ================= */
 
-/* Light mode (normal hitam) */
 #hero .btn-dark {
     background-color: #212529;
     border-color: #212529;
     color: #ffffff;
 }
 
-/* Dark mode → jadi putih */
 body.dark-mode #hero .btn-dark {
     background-color: #ffffff !important;
     border-color: #ffffff !important;
     color: #0f172a !important;
 }
 
-/* Hover dark mode */
 body.dark-mode #hero .btn-dark:hover {
     background-color: #e5e7eb !important;
     border-color: #e5e7eb !important;
     color: #0f172a !important;
+}
+
+/* ================= TECH PILL ================= */
+
+.tech-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.tech-pill {
+    background: #e5e7eb;
+    color: #374151;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 999px;
+    transition: all 0.25s ease;
+}
+
+.tech-pill:hover {
+    background: #d1d5db;
+}
+
+/* Dark Mode */
+
+body.dark-mode .tech-pill {
+    background: rgba(255, 255, 255, 0.08);
+    color: #e2e8f0;
+}
+
+body.dark-mode .tech-pill:hover {
+    background: rgba(255, 255, 255, 0.15);
 }
